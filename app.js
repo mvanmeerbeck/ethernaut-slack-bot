@@ -34,11 +34,6 @@ for (let i = 0; i < levelsIn.length; i++) {
 
   console.log('⚡️ Bolt app is running!');
 
-  await s3.deleteObject({
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: blockNumberPath,
-}).promise();
-
   let blockNumber;
   try {
     const blockNumberObject = await s3.getObject({
