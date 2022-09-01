@@ -1,6 +1,6 @@
 const { App } = require('@slack/bolt');
 const { ethers } = require("ethers");
-const fs = require('fs');
+const AWS = require("aws-sdk");
 require('dotenv').config();
 
 // Initializes your app with your bot token and signing secret
@@ -10,7 +10,8 @@ const app = new App({
   });
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.NETWORK_PROVIDER_URL);
-const blockNumberFile = './blockNumber';
+const s3 = new AWS.S3();
+const blockNumberPath = 'blockNumber';
 let blockNumber;
 
 abi = [{"constant":false,"inputs":[{"name":"_level","type":"address"}],"name":"registerLevel","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"isOwner","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_instance","type":"address"}],"name":"submitLevelInstance","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_level","type":"address"}],"name":"createLevelInstance","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"player","type":"address"},{"indexed":false,"name":"instance","type":"address"}],"name":"LevelInstanceCreatedLog","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"player","type":"address"},{"indexed":false,"name":"level","type":"address"}],"name":"LevelCompletedLog","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
@@ -33,15 +34,27 @@ for (let i = 0; i < levelsIn.length; i++) {
 
   console.log('⚡️ Bolt app is running!');
 
+  await s3.deleteObject({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: blockNumberPath,
+}).promise();
+
+  let blockNumber;
   try {
-    if (fs.existsSync(blockNumberFile)) {
-      blockNumber = Number(fs.readFileSync(blockNumberFile).toString());
-    } else {
-      blockNumber = await provider.getBlockNumber();
-      fs.writeFileSync(blockNumberFile, blockNumber.toString());
-    }
-  } catch(err) {
-    console.error(err)
+    const blockNumberObject = await s3.getObject({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: blockNumberPath,
+    }).promise();
+
+    blockNumber = Number(blockNumberObject.Body.toString());
+  } catch (err) {
+    blockNumber = await provider.getBlockNumber();
+
+    await s3.putObject({
+        Body: blockNumber.toString(),
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: blockNumberPath,
+    }).promise();
   }
 
   const ethernaut = new ethers.Contract(process.env.ETHERNAUT_ADDRESS, abi, provider);
@@ -75,10 +88,18 @@ for (let i = 0; i < levelsIn.length; i++) {
         text: `Well done <@${wallets[event.args.player]}>, You have completed the level ${levelsOut[event.args.level].name}!!!`
     });
 
-    fs.writeFileSync(blockNumberFile, event.blockNumber.toString());
+    await s3.putObject({
+      Body: event.blockNumber.toString(),
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: blockNumberPath,
+    }).promise();
   }
 
-  fs.writeFileSync(blockNumberFile, lastBlockNumber.toString());
+  await s3.putObject({
+    Body: lastBlockNumber.toString(),
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: blockNumberPath,
+  }).promise();
 
   app.stop();
 })();
