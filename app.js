@@ -5,7 +5,7 @@ require('dotenv').config();
 const test = process.env.NETWORK_PROVIDER_URL;
 console.log(process.env.NETWORK_PROVIDER_URL);
 console.log("URL" + test);
-for (let index = 0; index < array.length; index++) {
+for (let index = 0; index < test.length; index++) {
   console.log(test.charAt(i));
 }
 // Initializes your app with your bot token and signing secret
