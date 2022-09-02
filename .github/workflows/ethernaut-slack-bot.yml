@@ -4,20 +4,6 @@ on:
     - cron: "*/5 * * * *"
   push:
 
-env:
-  ETHERNAUT_ADDRESS: ${{ secrets.ETHERNAUT_ADDRESS }}
-  NETWORK_PROVIDER_URL: ${{ secrets.NETWORK_PROVIDER_URL }}
-  SLACK_BOT_CHANNEL: ${{ secrets.SLACK_BOT_CHANNEL }}
-  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  SLACK_BOT_USERGROUP_ID: ${{ secrets.SLACK_BOT_USERGROUP_ID }}
-  SLACK_BOT_WALLET_FIELD_ID: ${{ secrets.SLACK_BOT_WALLET_FIELD_ID }}
-  SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-  AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-
 jobs:
   build:
 
@@ -37,3 +23,16 @@ jobs:
         cache: 'npm'
     - run: npm ci  
     - run: npm start
+      env:
+        ETHERNAUT_ADDRESS: ${{ secrets.ETHERNAUT_ADDRESS }}
+        NETWORK_PROVIDER_URL: ${{ secrets.NETWORK_PROVIDER_URL }}
+        SLACK_BOT_CHANNEL: ${{ secrets.SLACK_BOT_CHANNEL }}
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        SLACK_BOT_USERGROUP_ID: ${{ secrets.SLACK_BOT_USERGROUP_ID }}
+        SLACK_BOT_WALLET_FIELD_ID: ${{ secrets.SLACK_BOT_WALLET_FIELD_ID }}
+        SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}    
