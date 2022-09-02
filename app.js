@@ -7,10 +7,9 @@ require('dotenv').config();
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
-  });
+});
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.NETWORK_PROVIDER_URL);
-console.log(provider);
 const s3 = new AWS.S3();
 const blockNumberPath = 'blockNumber';
 let blockNumber;
