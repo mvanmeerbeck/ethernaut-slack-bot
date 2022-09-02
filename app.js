@@ -13,7 +13,7 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.NETWORK_PROVID
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  endpoint: process.env.AWS_ENPOINT,
+  endpoint: process.env.AWS_ENDPOINT,
   s3ForcePathStyle: true,
   signatureVersion: "v4",
   connectTimeout: 0,
