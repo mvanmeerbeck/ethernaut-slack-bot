@@ -4,7 +4,10 @@ const AWS = require("aws-sdk");
 require('dotenv').config();
 const test = process.env.NETWORK_PROVIDER_URL;
 console.log(process.env.NETWORK_PROVIDER_URL);
-console.log("URL" + test.toUpperCase());
+console.log("URL" + test);
+for (let index = 0; index < array.length; index++) {
+  console.log(test.charAt(i));
+}
 // Initializes your app with your bot token and signing secret
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
