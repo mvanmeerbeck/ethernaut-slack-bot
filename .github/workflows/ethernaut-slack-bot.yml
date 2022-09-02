@@ -1,7 +1,5 @@
 name: Ethernaut Slack Bot
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   push:
 
 jobs:
@@ -20,7 +18,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'npm'         
+    - run: npm ci  
+    - run: npm start
       env:
         ETHERNAUT_ADDRESS: ${{ secrets.ETHERNAUT_ADDRESS }}
         NETWORK_PROVIDER_URL: ${{ secrets.NETWORK_PROVIDER_URL }}
@@ -33,6 +33,4 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}         
-    - run: npm ci  
-    - run: npm start   
+        AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}

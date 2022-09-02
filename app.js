@@ -10,6 +10,7 @@ const app = new App({
   });
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.NETWORK_PROVIDER_URL);
+console.log(provider);
 const s3 = new AWS.S3();
 const blockNumberPath = 'blockNumber';
 let blockNumber;
