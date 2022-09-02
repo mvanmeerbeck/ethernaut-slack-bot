@@ -9,7 +9,7 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
   });
 
-const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/347589f30c7a4c77a7873307623020fa");
+const provider = new ethers.providers.JsonRpcProvider(process.env.NETWORK_PROVIDER_URL);
 console.log(provider);
 const s3 = new AWS.S3();
 const blockNumberPath = 'blockNumber';
