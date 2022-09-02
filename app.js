@@ -2,7 +2,7 @@ const { App } = require('@slack/bolt');
 const { ethers } = require("ethers");
 const AWS = require("aws-sdk");
 require('dotenv').config();
-
+console.log(process.env);
 // Initializes your app with your bot token and signing secret
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
